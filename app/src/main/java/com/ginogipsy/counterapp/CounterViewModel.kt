@@ -1,18 +1,23 @@
 package com.ginogipsy.counterapp
 
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class CounterViewModel : ViewModel() {
-    var _count by mutableIntStateOf(0)
+    private val _counterRepository = CounterRepository()
+    private val _count = mutableIntStateOf(_counterRepository.getCounter().count)
+
+    //Expose the count as an immutable state
+    val count: MutableState<Int> = mutableIntStateOf(_count.intValue)
 
     fun increment() {
-        _count += 1
+        _counterRepository.increaseCounter()
+        _count.intValue = _counterRepository.getCounter().count
     }
 
     fun decrement() {
-        _count -= 1
+        _counterRepository.decreaseCounter()
+        _count.intValue = _counterRepository.getCounter().count
     }
 }

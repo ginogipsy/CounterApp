@@ -9,8 +9,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
@@ -22,12 +20,12 @@ import com.ginogipsy.counterapp.ui.theme.CounterAppTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         enableEdgeToEdge()
         setContent {
+            val viewModel = CounterViewModel()
             CounterAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                   CounterApp(modifier = Modifier.padding(innerPadding))
+                   TheCounterApp(viewModel = viewModel, modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -35,17 +33,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CounterApp(modifier: Modifier = Modifier) {
-
-    val count = remember { mutableIntStateOf(0) }
-
-    fun increment() {
-        count.intValue += 1
-    }
-
-    fun decrement() {
-        count.intValue -= 1
-    }
+fun TheCounterApp(viewModel: CounterViewModel, modifier: Modifier = Modifier) {
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -53,7 +41,7 @@ fun CounterApp(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally // Centro orizzontale
     ) {
         Text(
-            text = "Count: ${count.intValue}",
+            text = "Count: ${viewModel.count}",
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace
@@ -68,7 +56,7 @@ fun CounterApp(modifier: Modifier = Modifier) {
         ) {
             Button(
                 onClick = {
-                    increment()
+                    viewModel.increment()
                 },
                 modifier = Modifier.padding(8.dp)
             ) {
@@ -77,7 +65,7 @@ fun CounterApp(modifier: Modifier = Modifier) {
 
             Button(
                 onClick = {
-                    decrement()
+                    viewModel.decrement()
                 },
                 modifier = Modifier.padding(8.dp)
             ) {
